@@ -9,69 +9,54 @@ const GET_MOVIE = gql`
       id
       title
       medium_cover_image
+      language
+      rating
       description_intro
+      isLiked @client
+    }
+    movieSuggestions(id: $id) {
+      id
+      medium_cover_image
     }
   }
 `;
 
-const DetailsContainer = styled.div`
+const Container = styled.div`
+  height: 100vh;
+  background-image: linear-gradient(-45deg, #d754ab, #fd723a);
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
-  justify-content: center;
-  width: 100vw;
+  color: white;
 `;
 
-const DetailsHeader = styled.div`
-  width: 100vw;
-  height: 5vh;
-  background: #000;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+const Column = styled.div`
+  margin-left: 10px;
+  width: 50%;
 `;
 
-const DetailsTop = styled.div`
-  font-size: 1.5rem;
-  font-weight: 600;
-  padding: 2rem;
+const Title = styled.h1`
+  font-size: 65px;
+  margin-bottom: 15px;
 `;
 
-const DetailsMain = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+const Subtitle = styled.h4`
+  font-size: 35px;
+  margin-bottom: 10px;
 `;
 
-const DetailsLoading = styled.div`
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: grey;
-  margin-top: 15em; //중간정렬 어떻게했더라..
+const Description = styled.p`
+  font-size: 28px;
 `;
 
-const DetailsContents = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 5em;
-  width: 80vw;
-`;
-
-const DetailsImg = styled.img``;
-
-const DetailsTitle = styled.div`
-  font-size: 25px;
-  font-weight: 600;
-  margin-top: 3em;
-`;
-
-const DetailsDesc = styled.div`
-  margin-top: 1.5rem;
+const Poster = styled.div`
+  width: 25%;
+  height: 60%;
+  background-color: transparent;
+  background-image: url(${(props) => props.bg});
+  background-size: cover;
+  background-position: center center;
 `;
 
 export default () => {
@@ -80,43 +65,26 @@ export default () => {
     variables: { id: +id },
     // 변수에 그냥 {id}를 쓰면 undefined됨. 이때,
     // useParams()로 값을 받아오면 그 값의 타입은 string이기 때문에
-    // +id를 설정해주면 String애서 Integer로 변환해줘야함
+    // +id를 설정해주면 String애서 Integer로 변환해줘야함 OR parseInd(id)
   });
-  console.log(id, loading, data);
+  // console.log(id, loading, data);
+
   return (
-    <DetailsContainer>
-      <DetailsHeader>
-        <DetailsTop>Apollo 2022</DetailsTop>
-      </DetailsHeader>
-      <DetailsMain>
-        {/* {loading && <DetailsLoading>Loading...</DetailsLoading>}
-        {!loading && data.movieDetails && (
-          <DetailsContents>
-            <DetailsImg
-              src={data.movieDetails.medium_cover_image}
-              alt={data.movieDetails.title}
-            />
-            <DetailsTitle>{data.movieDetails.title}</DetailsTitle>
-            <DetailsDesc>{data.movieDetails.description_intro}</DetailsDesc>
-          </DetailsContents>
-        )} */}
-        {loading ? (
-          <DetailsLoading>Loading...</DetailsLoading>
-        ) : (
-          <>
-            {data.movieDetails && (
-              <DetailsContents>
-                <DetailsImg
-                  src={data.movieDetails.medium_cover_image}
-                  alt={data.movieDetails.title}
-                />
-                <DetailsTitle>{data.movieDetails.title}</DetailsTitle>
-                <DetailsDesc>{data.movieDetails.description_intro}</DetailsDesc>
-              </DetailsContents>
-            )}
-          </>
-        )}
-      </DetailsMain>
-    </DetailsContainer>
+    <Container>
+      <Column>
+        <Title>
+          {loading
+            ? 'Loading...'
+            : `${data.movieDetails.title} ${
+                data.movieDetails.isLiked ? '😞' : '💖'
+              }`}
+        </Title>
+        <Subtitle>
+          {data?.movieDetails?.language} · {data?.movieDetails?.rating}
+        </Subtitle>
+        <Description>{data?.movieDetails?.description_intro}</Description>
+      </Column>
+      <Poster bg={data?.movieDetails?.medium_cover_image}></Poster>
+    </Container>
   );
 };

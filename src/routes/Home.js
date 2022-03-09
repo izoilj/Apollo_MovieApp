@@ -8,6 +8,7 @@ const GET_MOVIES = gql`
     movies {
       id
       medium_cover_image
+      isLiked @client
     }
   }
 `;
@@ -16,59 +17,45 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 100vw;
+  width: 100%;
 `;
 
-const Header = styled.div`
-  width: 100vw;
-  height: 40vh;
-  background: #000;
-  color: #fff;
+const Header = styled.header`
+  background-image: linear-gradient(-45deg, #d754ab, #fd723a);
+  height: 45vh;
+  color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  width: 100%;
 `;
 
-const Title = styled.div`
-  font-size: 2.5rem;
+const Title = styled.h1`
+  font-size: 60px;
   font-weight: 600;
-  padding: 2rem;
+  margin-bottom: 20px;
 `;
 
-const SubTitle = styled.div`
-  font-size: 1.5rem;
-  font-weight: 400;
-`;
-
-const Main = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+const Subtitle = styled.h3`
+  font-size: 35px;
 `;
 
 const Loading = styled.div`
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: grey;
-  margin-top: 5em;
+  font-size: 18px;
+  opacity: 0.5;
+  font-weight: 500;
+  margin-top: 10px;
 `;
 
-// #1
-// export default () => {
-//   const { loading, error, data } = useQuery(GET_MOVIES);
-//   // console.log(loading, error, data);
-//   if (loading) {
-//     return 'Loaging...';
-//   }
-//   if (data && data.movies) {
-//     return data.movies.map((m) => <div>{m.id}</div>);
-//   }
-// };
-
-// #2
+const Movies = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 25px;
+  width: 60%;
+  position: relative;
+  top: -50px;
+`;
 
 export default () => {
   const { loading, error, data } = useQuery(GET_MOVIES);
@@ -76,16 +63,20 @@ export default () => {
   return (
     <Container>
       <Header>
-        <Title>Apollo 2022</Title>
-        <SubTitle>I love GraphQL</SubTitle>
+        <Title>Apollo 2020</Title>
+        <Subtitle>I love GraphQL</Subtitle>
       </Header>
-      <Main>
-        {loading && <Loading>Loading...</Loading>}
-        {/* {!loading &&
-          data.movies &&
-          data.movies.map((m) => <Movie key={m.id} id={m.id} />)} */}
-        {!loading && data?.movies?.map((m) => <Movie key={m.id} id={m.id} />)}
-      </Main>
+      {loading && <Loading>Loading...</Loading>}
+      <Movies>
+        {data?.movies?.map((m) => (
+          <Movie
+            key={m.id}
+            id={m.id}
+            isLiked={m.isLiked}
+            bg={m.medium_cover_image}
+          />
+        ))}
+      </Movies>
     </Container>
   );
 };
