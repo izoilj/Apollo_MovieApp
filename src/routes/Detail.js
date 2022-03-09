@@ -89,7 +89,7 @@ export default () => {
         <DetailsTop>Apollo 2022</DetailsTop>
       </DetailsHeader>
       <DetailsMain>
-        {loading && <DetailsLoading>Loading...</DetailsLoading>}
+        {/* {loading && <DetailsLoading>Loading...</DetailsLoading>}
         {!loading && data.movieDetails && (
           <DetailsContents>
             <DetailsImg
@@ -99,6 +99,22 @@ export default () => {
             <DetailsTitle>{data.movieDetails.title}</DetailsTitle>
             <DetailsDesc>{data.movieDetails.description_intro}</DetailsDesc>
           </DetailsContents>
+        )} */}
+        {loading ? (
+          <DetailsLoading>Loading...</DetailsLoading>
+        ) : (
+          <>
+            {data.movieDetails && (
+              <DetailsContents>
+                <DetailsImg
+                  src={data.movieDetails.medium_cover_image}
+                  alt={data.movieDetails.title}
+                />
+                <DetailsTitle>{data.movieDetails.title}</DetailsTitle>
+                <DetailsDesc>{data.movieDetails.description_intro}</DetailsDesc>
+              </DetailsContents>
+            )}
+          </>
         )}
       </DetailsMain>
     </DetailsContainer>

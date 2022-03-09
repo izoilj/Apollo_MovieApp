@@ -81,10 +81,15 @@ export default () => {
       </Header>
       <Main>
         {loading && <Loading>Loading...</Loading>}
-        {!loading &&
+        {/* {!loading &&
           data.movies &&
-          data.movies.map((m) => <Movie key={m.id} id={m.id} />)}
+          data.movies.map((m) => <Movie key={m.id} id={m.id} />)} */}
+        {!loading && data?.movies?.map((m) => <Movie key={m.id} id={m.id} />)}
       </Main>
     </Container>
   );
 };
+
+// cache -> 한번 id를 클릭해서 details 페이지로갔다가 뒤로가기 후에 다시 같은 id를 클릭하면,
+//  로딩페이지가 뜨지 않는다. 그 이유는 graphql은 내가했던걸 캐쉬?저장? 암튼 그래서
+//  다시 리퀘스트할 필요가 없게 하기 때문
